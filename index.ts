@@ -13,11 +13,7 @@ let miningStatus = false;
 // app logic
 const app = express();
 app.use(express.json());
-app.use(
-  cors({
-    origin: "https://blockchain-nodes-mtqh.vercel.app/",
-  }),
-);
+app.use(cors());
 
 // API endpoints
 
