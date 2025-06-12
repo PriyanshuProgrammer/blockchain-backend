@@ -1,25 +1,20 @@
-import express from "express";
-import cors from "cors";
 import { WebSocketServer, WebSocket } from "ws";
+import cors from "cors";
+import express from "express";
+import http from "http";
 
 //vars
-const wss = new WebSocketServer({ port: 8080 });
+const app = express();
+app.use(express.json());
+app.use(cors());
+const server = http.createServer(app);
+
+const wss = new WebSocketServer({ server });
 const transactions = Array<string>();
 const sockets = Array<WebSocket>();
 const queue = Array<Array<string>>();
 
 let miningStatus = false;
-
-// app logic
-const app = express();
-app.use(express.json());
-app.use(cors());
-
-// API endpoints
-
-app.get("/", (req, res) => {
-  res.send("Welcome to the blockchain server!");
-});
 
 // web socket logic
 wss.on("connection", (ws) => {
@@ -108,6 +103,11 @@ function handleQueue() {
   } else miningStatus = false;
 }
 
-app.listen(3000, () => {
-  console.log("Server is running on port 3000");
+// Start the server
+app.get("/", (req, res) => {
+  res.send("WebSocket server is running");
+});
+
+server.listen(3000, () => {
+  console.log("Server is listening on port 3000");
 });
